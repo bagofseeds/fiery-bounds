@@ -3,7 +3,7 @@
 extra_css = ["stylesheets/extra.css"]
 
 nav = [
-  {"All the Bags" = "https://bagofseeds.github.io/fiery/"},
+  {"All the Matches" = "https://bagofseeds.github.io/fiery/"},
   {"Fiery Bounds" = "index.md"},
   {"API" = [
     "api/index.md",
@@ -11,6 +11,11 @@ nav = [
     {"padding" = "api/padding.md"},
     {"realtransforms" = "api/realtransforms.md"},
     {"types" = "api/types.md"},
+  ]},
+  {"Examples" = [
+    "examples/index.md",
+    {"Padding" = "examples/pad.md"},
+    {"Real transforms" = "examples/realtransforms.md"},
   ]},
 ]
 
@@ -88,6 +93,9 @@ allow_inspection = true
 filters = "public"
 group_by_category = true
 show_category_heading = true
+modernize_annotations       = true
+show_signature_annotations  = true
+signature_crossrefs         = true
 
 # ----------------------------------------------------------------------------
 # Markdown extras

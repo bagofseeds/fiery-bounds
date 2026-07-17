@@ -1,6 +1,5 @@
 ---
-hide:
-  - navigation
+icon: fontawesome/brands/python
 ---
 
 # ::: fiery.bounds

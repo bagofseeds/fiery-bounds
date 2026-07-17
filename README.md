@@ -2,7 +2,7 @@
 
 Boundary conditions (circulant, mirror, reflect) and real transforms (DCT, DST) in PyTorch.
 
-`fiery-bounds` is a [`fiery`](https://github.com/bagofseeds/fiery) bag: it
+`fiery-bounds` is a [`fiery`](https://github.com/bagofseeds/fiery) match: it
 installs on its own and imports as `fiery.bounds`.
 
 ## Overview
@@ -33,7 +33,7 @@ Finally, it implements additional utilities:
 ## Documentation
 
 See our [**documentation**](https://bagofseeds.github.io/fiery-bounds/) and
-[**notebooks**](docs/notebooks/).
+[**notebooks**](docs/examples/).
 
 ## Installation
 

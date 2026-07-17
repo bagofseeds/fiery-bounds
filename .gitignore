@@ -173,6 +173,9 @@ venv.bak/
 # mkdocs documentation
 /site
 
+# generated example markdown (built from notebooks at docs build time)
+docs/examples/*.md
+
 # mypy
 .mypy_cache/
 .dmypy.json
