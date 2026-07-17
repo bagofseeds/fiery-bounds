@@ -1,6 +1,6 @@
 import torch
-from . import _realtransforms_from_fft as F
 
+from . import _realtransforms_from_fft as F
 
 flipnorm = {
     'forward': 'backward',
@@ -12,7 +12,6 @@ fliptype = {1: 1, 2: 3, 3: 2, 4: 4}
 
 
 class DCTN(torch.autograd.Function):
-
     @staticmethod
     def forward(ctx, x, type, dim, norm):
         norm = norm or 'backward'
@@ -49,7 +48,6 @@ class DCTN(torch.autograd.Function):
 
 
 class DSTN(torch.autograd.Function):
-
     @staticmethod
     def forward(ctx, x, type, dim, norm):
         norm = norm or 'backward'
@@ -71,10 +69,17 @@ class DSTN(torch.autograd.Function):
         norm = "backward" if scipy else ctx.norm
         type = fliptype[ctx.type]
         prm = dict(
-            dim=ctx.dim, type=type, square=True, dst=True,
+            dim=ctx.dim,
+            type=type,
+            square=True,
+            dst=True,
         )
         spprm = dict(
-            dim=ctx.dim, type=type, scipy=True, inverse=True, dst=True,
+            dim=ctx.dim,
+            type=type,
+            scipy=True,
+            inverse=True,
+            dst=True,
         )
         if type in (1, 3):
             x = x.clone()

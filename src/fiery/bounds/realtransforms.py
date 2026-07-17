@@ -7,7 +7,7 @@ This module implements discrete transforms for real signals:
 The implementations relies on the FFT under-the-hood, with memory-saving
 tricks (borrowed from [`cupy`](https://github.com/cupy/cupy)).
 
-The table belows lists all functions implemented in the module.
+The table below lists all functions implemented in the module.
 In addition to these, wrappers of the form
 `#!python FUNCTYPE = partial(FUNC, type=TYPE)` are defined. For example:
 ```python
@@ -37,25 +37,59 @@ idstn
 ```
 
 """
+
 __all__ = [
     # 1D
-    'dct', 'dst', 'idct', 'idst',
+    'dct',
+    'dst',
+    'idct',
+    'idst',
     # ND
-    'dctn', 'dstn', 'idctn', 'idstn',
+    'dctn',
+    'dstn',
+    'idctn',
+    'idstn',
     # convenience wrappers
-    'dct1', 'dct2', 'dct3', 'dct4',
-    'dst1', 'dst2', 'dst3', 'dst4',
-    'idct1', 'idct2', 'idct3', 'idct4',
-    'idst1', 'idst2', 'idst3', 'idst4',
-    'dctn1', 'dctn2', 'dctn3', 'dctn4',
-    'dstn1', 'dstn2', 'dstn3', 'dstn4',
-    'idctn1', 'idctn2', 'idctn3', 'idctn4',
-    'idstn1', 'idstn2', 'idstn3', 'idstn4',
+    'dct1',
+    'dct2',
+    'dct3',
+    'dct4',
+    'dst1',
+    'dst2',
+    'dst3',
+    'dst4',
+    'idct1',
+    'idct2',
+    'idct3',
+    'idct4',
+    'idst1',
+    'idst2',
+    'idst3',
+    'idst4',
+    'dctn1',
+    'dctn2',
+    'dctn3',
+    'dctn4',
+    'dstn1',
+    'dstn2',
+    'dstn3',
+    'dstn4',
+    'idctn1',
+    'idctn2',
+    'idctn3',
+    'idctn4',
+    'idstn1',
+    'idstn2',
+    'idstn3',
+    'idstn4',
 ]
-from torch import Tensor
-from typing import Optional
 from functools import partial
+from typing import Optional
+
+from torch import Tensor
+
 from ._realtransforms_autograd import DCTN, DSTN, flipnorm, fliptype
+
 _IMPLEMENTED_TYPES = (1, 2, 3)
 
 

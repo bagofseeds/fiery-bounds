@@ -39,18 +39,37 @@ nocheck
     Do not wrap indices (assume they are inbounds)
 
 """
+
 __all__ = [
     'nocheck',
-    'replicate', 'repeat', 'nearest', 'border', 'edge',
-    'dft', 'wrap', 'gridwrap', 'circular', 'circulant',
-    'dct1', 'mirror',
-    'dct2', 'reflect', 'reflection', 'gridmirror', 'neumann',
-    'dst1', 'antimirror',
-    'dst2', 'antireflect', 'dirichlet',
+    'replicate',
+    'repeat',
+    'nearest',
+    'border',
+    'edge',
+    'dft',
+    'wrap',
+    'gridwrap',
+    'circular',
+    'circulant',
+    'dct1',
+    'mirror',
+    'dct2',
+    'reflect',
+    'reflection',
+    'gridmirror',
+    'neumann',
+    'dst1',
+    'antimirror',
+    'dst2',
+    'antireflect',
+    'dirichlet',
 ]
+from typing import Tuple
+
 import torch
 from torch import Tensor
-from typing import Tuple
+
 from ._utils import floor_div_int, jitscript
 
 
@@ -82,17 +101,18 @@ def replicate(i, n):
         Sign of the transformation (always 1 for replicate)
 
     """
-    return (replicate_script(i, n) if torch.is_tensor(i) else
-            replicate_int(i, n))
+    return (
+        replicate_script(i, n) if torch.is_tensor(i) else replicate_int(i, n)
+    )
 
 
 def replicate_int(i, n):
-    return min(max(i, 0), n-1), 1
+    return min(max(i, 0), n - 1), 1
 
 
 @jitscript
 def replicate_script(i, n: int) -> Tuple[Tensor, int]:
-    return i.clamp(min=0, max=n-1), 1
+    return i.clamp(min=0, max=n - 1), 1
 
 
 def dft(i, n):
@@ -242,7 +262,7 @@ def dst1_int(i: int, n: int) -> Tuple[int, int]:
     n2 = 2 * (n + 1)
 
     # sign
-    ii = (2*n - i) if i < 0 else i
+    ii = (2 * n - i) if i < 0 else i
     ii = (ii % n2) % (n + 1)
     x = 0 if ii == n else 1
     x = -x if (i / (n + 1)) % 2 >= 1 else x
@@ -251,7 +271,7 @@ def dst1_int(i: int, n: int) -> Tuple[int, int]:
     i = -i - 2 if i < 0 else i
     i = i % n2
     i = (n2 - 2) - i if i > n else i
-    i = min(max(i, 0), n-1)
+    i = min(max(i, 0), n - 1)
     return i, x
 
 
@@ -261,7 +281,7 @@ def dst1_script(i, n: int) -> Tuple[Tensor, Tensor]:
 
     # sign
     #   zeros
-    ii = torch.where(i < 0, 2*n - i, i).remainder(n2).remainder(n + 1)
+    ii = torch.where(i < 0, 2 * n - i, i).remainder(n2).remainder(n + 1)
     x = (ii != n).to(torch.int8)
     #   +/- ones
     ii = torch.where(i < 0, n - 1 - i, i)
@@ -271,7 +291,7 @@ def dst1_script(i, n: int) -> Tuple[Tensor, Tensor]:
     i = torch.where(i < 0, -2 - i, i)
     i = i.remainder(n2)
     i = torch.where(i > n, (n2 - 2) - i, i)
-    i = i.clamp(0, n-1)
+    i = i.clamp(0, n - 1)
     return i, x
 
 
@@ -301,7 +321,7 @@ def dst2(i, n):
 
 
 def dst2_int(i: int, n: int) -> Tuple[int, int]:
-    x = -1 if (i/n) % 2 >= 1 else 1
+    x = -1 if (i / n) % 2 >= 1 else 1
     return dct2_int(i, n)[0], x
 
 

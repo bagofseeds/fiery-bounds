@@ -11,15 +11,18 @@ roll
 ensure_shape
     Pad/crop a tensor so that it has a given shape
 """
+
 __all__ = ['pad', 'roll', 'ensure_shape']
-import torch
 import math
-from torch import Tensor
-from typing import Optional
 from numbers import Number
+from typing import Optional
+
+import torch
+from torch import Tensor
+
 from . import indexing
-from .types import to_fourier, BoundLike, SequenceOrScalar
-from ._utils import prod, ensure_list, meshgrid_list_ij, sub2ind_list
+from ._utils import ensure_list, meshgrid_list_ij, prod, sub2ind_list
+from .types import BoundLike, SequenceOrScalar, to_fourier
 
 
 def pad(
@@ -27,8 +30,8 @@ def pad(
     padsize: SequenceOrScalar[int],
     mode: SequenceOrScalar[BoundLike] = 'constant',
     value: Number = 0,
-    side: Optional[str] = None
-):
+    side: Optional[str] = None,
+) -> Tensor:
     """Pad a tensor.
 
     This function is a bit more generic than torch's native pad
@@ -112,13 +115,13 @@ def pad(
             padpre = (0,) * len(padpost)
         else:
             raise ValueError(f'Unknown side `{side}`')
-    padpre = (0,) * max(0, inp.ndim-len(padpre)) + padpre
-    padpost = (0,) * max(0, inp.ndim-len(padpost)) + padpost
+    padpre = (0,) * max(0, inp.ndim - len(padpre)) + padpre
+    padpost = (0,) * max(0, inp.ndim - len(padpost)) + padpost
     if inp.dim() != len(padpre) or inp.dim() != len(padpost):
         raise ValueError('Padding length too large')
 
     # Pad
-    mode = ['nocheck'] * max(0, inp.ndim-len(mode)) + mode
+    mode = ['nocheck'] * max(0, inp.ndim - len(mode)) + mode
     if all(m in ('zero', 'nocheck') for m in mode):
         return _pad_constant(inp, padpre, padpost, value)
     else:
@@ -127,8 +130,9 @@ def pad(
 
 
 def _pad_constant(inp, padpre, padpost, value):
-    new_shape = [s + pre + post
-                 for s, pre, post in zip(inp.shape, padpre, padpost)]
+    new_shape = [
+        s + pre + post for s, pre, post in zip(inp.shape, padpre, padpost)
+    ]
     out = inp.new_full(new_shape, value)
     slicer = [slice(pre, pre + s) for pre, s in zip(padpre, inp.shape)]
     out[tuple(slicer)] = inp
@@ -137,7 +141,7 @@ def _pad_constant(inp, padpre, padpost, value):
 
 def _pad_bound(inp, padpre, padpost, bound):
     begin = list(map(lambda x: -x, padpre))
-    end = tuple(d+p for d, p in zip(inp.shape, padpost))
+    end = tuple(d + p for d, p in zip(inp.shape, padpost))
 
     grid = [
         torch.arange(b, e, device=inp.device) for (b, e) in zip(begin, end)
@@ -150,7 +154,7 @@ def _pad_bound(inp, padpre, padpost, bound):
         for d in range(len(mult)):
             if not torch.is_tensor(mult[d]):
                 continue
-            for _ in range(d+1, len(mult)):
+            for _ in range(d + 1, len(mult)):
                 mult[d].unsqueeze_(-1)
     mult = prod(mult)
     grid = sub2ind_list(grid, inp.shape)
@@ -167,8 +171,8 @@ def ensure_shape(
     mode: SequenceOrScalar[BoundLike] = 'constant',
     value: Number = 0,
     side: str = 'post',
-    ceil: bool = False
-):
+    ceil: bool = False,
+) -> Tensor:
     """Pad/crop a tensor so that it has a given shape
 
     Parameters
@@ -197,11 +201,12 @@ def ensure_shape(
     if inp.ndim < len(shape):
         inp = inp.reshape((1,) * max(0, len(shape) - inp.ndim) + inp.shape)
     inshape = inp.shape
-    shape = [inshape[d] if shape[d] is None else shape[d]
-             for d in range(len(shape))]
+    shape = [
+        inshape[d] if shape[d] is None else shape[d] for d in range(len(shape))
+    ]
     ndim = len(shape)
 
-    half = (lambda x: int(math.ceil(x/2))) if ceil else (lambda x: x//2)
+    half = (lambda x: int(math.ceil(x / 2))) if ceil else (lambda x: x // 2)
 
     # crop
     if side == 'both':
@@ -217,7 +222,7 @@ def ensure_shape(
     # pad
     pad_size = [max(0, shape[d] - inshape[d]) for d in range(ndim)]
     if side == 'both':
-        pad_size = [[half(p), p-half(p)] for p in pad_size]
+        pad_size = [[half(p), p - half(p)] for p in pad_size]
         pad_size = [q for p in pad_size for q in p]
         side = None
     inp = pad(inp, tuple(pad_size), mode=mode, value=value, side=side)
@@ -229,8 +234,8 @@ def roll(
     inp: Tensor,
     shifts: SequenceOrScalar[int] = 1,
     dims: Optional[SequenceOrScalar[int]] = None,
-    bound: SequenceOrScalar[BoundLike] = 'circular'
-):
+    bound: SequenceOrScalar[BoundLike] = 'circular',
+) -> Tensor:
     r"""Like `torch.roll`, but with any boundary condition
 
     !!! warning

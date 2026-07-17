@@ -39,18 +39,20 @@ described in [5]_.
 
 .. [3] http://fourier.eng.hmc.edu/e161/lectures/dct/node2.html
 
-.. [4] https://dsp.stackexchange.com/questions/2807/fast-cosine-transform-via-fft  # noqa
+.. [4] https://dsp.stackexchange.com/questions/2807/
+       fast-cosine-transform-via-fft
 
 .. [5] X. Shao, S. G. Johnson. Type-II/III DCT/DST algorithms with reduced
     number of arithmetic operations, Signal Processing, Volume 88, Issue 6,
     pp. 1553-1564, 2008.
 """
+
 import math
 import numbers
 import operator
+
 import torch
 from torch import fft as _fft
-
 
 __all__ = ['dct', 'dctn', 'dst', 'dstn', 'idct', 'idctn', 'idst', 'idstn']
 
@@ -625,9 +627,7 @@ def _init_nd_shape_and_dims(x, shape, dims):
         shape = [x.shape[a] for a in dims]
 
     if any(s < 1 for s in shape):
-        raise ValueError(
-            f'invalid number of data points ({shape}) specified'
-        )
+        raise ValueError(f'invalid number of data points ({shape}) specified')
 
     return shape, dims
 
@@ -636,7 +636,7 @@ sqrt2 = math.sqrt(2)
 
 
 def ortho_prescale_(
-        x, dim, type, dst=False, inverse=False, square=False, scipy=False
+    x, dim, type, dst=False, inverse=False, square=False, scipy=False
 ):
     if not isinstance(dim, numbers.Number):
         for d in dim:
@@ -658,7 +658,7 @@ def ortho_prescale_(
 
 
 def ortho_postscale_(
-        x, dim, type, dst=False, inverse=False, square=False, scipy=False
+    x, dim, type, dst=False, inverse=False, square=False, scipy=False
 ):
     if not isinstance(dim, numbers.Number):
         for d in dim:
@@ -786,7 +786,7 @@ def _reshuffle_dct2(x, dim, dst=False):
 
 
 def _mult_factor_dct2(
-        n, n_truncate, norm_factor, dtype=torch.float32, device=None
+    n, n_truncate, norm_factor, dtype=torch.float32, device=None
 ):
     real = torch.zeros(n_truncate, dtype=dtype, device=device)
     imag = torch.arange(n_truncate, dtype=dtype, device=device)
@@ -810,7 +810,12 @@ def _exp_factor_dct2(x, n, dim, norm_factor, n_truncate=None):
 
 
 def _dct_or_dst_type2(
-    x, n=None, dim=-1, forward=True, norm=None, dst=False,
+    x,
+    n=None,
+    dim=-1,
+    forward=True,
+    norm=None,
+    dst=False,
 ):
     """Forward DCT/DST-II (or inverse DCT/DST-III) along a single dim
 
@@ -846,9 +851,7 @@ def _dct_or_dst_type2(
     if dim < 0:
         dim += x.ndim
     if n is not None and n < 1:
-        raise ValueError(
-            f'invalid number of data points ({n}) specified'
-        )
+        raise ValueError(f'invalid number of data points ({n}) specified')
 
     x = _cook_shape(x, (n,), (dim,), 'R2R')
     n = x.shape[dim]
@@ -944,7 +947,12 @@ def _exp_factor_dct3(x, n, dim, norm_factor):
 
 
 def _dct_or_dst_type3(
-    x, n=None, dim=-1, norm=None, forward=True, dst=False,
+    x,
+    n=None,
+    dim=-1,
+    norm=None,
+    forward=True,
+    dst=False,
 ):
     """Forward DCT/DST-III (or inverse DCT/DST-II) along a single dim.
 
@@ -981,9 +989,7 @@ def _dct_or_dst_type3(
     if dim < 0:
         dim += x.ndim
     if n is not None and n < 1:
-        raise ValueError(
-            f'invalid number of data points ({n}) specified'
-        )
+        raise ValueError(f'invalid number of data points ({n}) specified')
 
     x = _cook_shape(x, (n,), (dim,), 'R2R')
     n = x.shape[dim]
@@ -1003,8 +1009,10 @@ def _dct_or_dst_type3(
         sl0_scale = 0.5
         inorm = 'none' if forward else 'full'
     else:
-        raise ValueError(f'Invalid norm value "{norm}", should be "backward", '
-                         '"ortho" or "forward"')
+        raise ValueError(
+            f'Invalid norm value "{norm}", should be "backward", '
+            '"ortho" or "forward"'
+        )
     norm_factor = _get_dct_norm_factor(n, inorm=inorm, dct_type=3)
 
     if dst:
@@ -1032,16 +1040,18 @@ def _dct_or_dst_type3(
 
 
 def _dct_type1(
-    x, n=None, dim=-1, norm=None, forward=True,
+    x,
+    n=None,
+    dim=-1,
+    norm=None,
+    forward=True,
 ):
     if dim < -x.ndim or dim >= x.ndim:
         raise IndexError('dim out of range')
     if dim < 0:
         dim += x.ndim
     if n is not None and n < 1:
-        raise ValueError(
-            f'invalid number of data points ({n}) specified'
-        )
+        raise ValueError(f'invalid number of data points ({n}) specified')
 
     x = _cook_shape(x, (n,), (dim,), 'R2R')
     n = x.shape[dim]
@@ -1056,7 +1066,7 @@ def _dct_type1(
     if norm.startswith('ortho'):
         x = x.movedim(dim, 0)
         x[0] *= sqrt2
-        x[n-1] *= sqrt2
+        x[n - 1] *= sqrt2
         x = x.movedim(0, dim)
 
     # determine normalization factor
@@ -1067,12 +1077,14 @@ def _dct_type1(
     elif norm == 'backward' or norm is None:
         inorm = 'none' if forward else 'full'
     else:
-        raise ValueError(f'Invalid norm value "{norm}", should be "backward", '
-                         '"ortho" or "forward"')
+        raise ValueError(
+            f'Invalid norm value "{norm}", should be "backward", '
+            '"ortho" or "forward"'
+        )
     norm_factor = _get_dct_norm_factor(n, inorm=inorm, dct_type=1)
 
     # fft
-    x = _fft.fft(x, n=2*(n-1), dim=dim)
+    x = _fft.fft(x, n=2 * (n - 1), dim=dim)
     slicer_pre = [slice(None)] * x.ndim
     slicer_pre[dim] = slice(n)
     x = torch.real(x[tuple(slicer_pre)])
@@ -1089,27 +1101,29 @@ def _dct_type1(
 
 
 def _dst_type1(
-        x, n=None, dim=-1, norm=None, forward=True,
+    x,
+    n=None,
+    dim=-1,
+    norm=None,
+    forward=True,
 ):
     if dim < -x.ndim or dim >= x.ndim:
         raise IndexError('dim out of range')
     if dim < 0:
         dim += x.ndim
     if n is not None and n < 1:
-        raise ValueError(
-            f'invalid number of data points ({n}) specified'
-        )
+        raise ValueError(f'invalid number of data points ({n}) specified')
 
     x = _cook_shape(x, (n,), (dim,), 'R2R')
     n = x.shape[dim]
 
     # replicate signal
     slicer_pre = [slice(None)] * x.ndim
-    slicer_pre[dim] = slice(1, n+1)
+    slicer_pre[dim] = slice(1, n + 1)
     slicer_post = [slice(None)] * x.ndim
-    slicer_post[dim] = slice(n+2, None)
+    slicer_post[dim] = slice(n + 2, None)
     bigshape = list(x.shape)
-    bigshape[dim] = 2*(n+1)
+    bigshape[dim] = 2 * (n + 1)
     tmp = x
     x = x.new_zeros(bigshape)
     x[tuple(slicer_pre)] = tmp
@@ -1125,15 +1139,17 @@ def _dst_type1(
     elif norm == 'backward' or norm is None:
         inorm = 'none' if forward else 'full'
     else:
-        raise ValueError(f'Invalid norm value "{norm}", should be "backward", '
-                         '"ortho" or "forward"')
-    norm_factor = _get_dct_norm_factor(n+2, inorm=inorm, dct_type=1)
+        raise ValueError(
+            f'Invalid norm value "{norm}", should be "backward", '
+            '"ortho" or "forward"'
+        )
+    norm_factor = _get_dct_norm_factor(n + 2, inorm=inorm, dct_type=1)
     # TODO: I am not exactly sure why I need the `+2`
 
     # fft
-    x = _fft.fft(x, n=2*(n+1), dim=dim)
+    x = _fft.fft(x, n=2 * (n + 1), dim=dim)
     slicer_pre = [slice(None)] * x.ndim
-    slicer_pre[dim] = slice(1, n+1)
+    slicer_pre[dim] = slice(1, n + 1)
     x = torch.imag(x[tuple(slicer_pre)])
     x *= -norm_factor
 

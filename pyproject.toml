@@ -1,46 +1,90 @@
-[build-system]
-requires = [
-  "setuptools>=61.0",
-  "versioneer[toml]==0.29",
-]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "torch-bounds"
+name = "fiery-bounds"
 authors = [
-  { name="Yael Balbastre", email="yael.balbastre@gmail.com" },
+    {name = "Yael Balbastre", email = "yael.balbastre@gmail.com"},
+]
+maintainers = [
+    {name = "Yael Balbastre", email = "yael.balbastre@gmail.com"},
 ]
 description = "Boundary conditions and real transforms in PyTorch"
 readme = "README.md"
-requires-python = ">=3.6"
+license = {text = "MIT"}
+keywords = ["fiery", "pytorch", "torch", "boundary-conditions", "dct", "dst"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dynamic = ["version"]
-license = {file = "LICENSE"}
+requires-python = ">=3.6"
 dependencies = [
     "torch>=1.3",
 ]
 
+[project.urls]
+Homepage = "https://github.com/bagofseeds/fiery-bounds"
+Documentation = "https://bagofseeds.github.io/fiery-bounds/"
+Issues = "https://github.com/bagofseeds/fiery-bounds/issues"
+Repository = "https://github.com/bagofseeds/fiery-bounds"
+
 [project.optional-dependencies]
 realtransforms = ["torch>=1.8"]
-test = ["scipy"]
+test = [
+    "pytest>=7",
+    "scipy",
+]
 
-[project.urls]
-Homepage = "https://github.com/balbasty/torch-bounds"
-Issues = "https://github.com/balbasty/torch-bounds/issues"
+[build-system]
+requires = [
+    "setuptools>=59.0",
+    "wheel>=0.45.1",
+    "versioningit>=1.0",
+]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["bounds"]
+package-dir = {"" = "src"}
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "bounds/_version.py"
-versionfile_build = "bounds/_version.py"
-tag_prefix = ""
-parentdir_prefix = ""
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["fiery*"]
+namespaces = true
+
+[tool.versioningit]
+default-version = "0+unknown"
+
+[tool.versioningit.vcs]
+default-tag = "0.1"
+
+[tool.versioningit.format]
+distance = "{base_version}+{distance}.{vcs}{rev}"
+dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
+distance-dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
+
+[tool.versioningit.write]
+file = "src/fiery/bounds/_version.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "W"]
+ignore = [
+    "B905",   # zip(strict=...) requires Python >= 3.10
+    "B007",   # allow unused loop variables
+    "E731",   # allow assigning lambdas to variables
+]
+
+[tool.codespell]
+check-filenames = true
+skip = ".git,*.egg-info,build,dist,*.pdf,*.svg,*.ipynb"
+ignore-words-list = "nd,commun"

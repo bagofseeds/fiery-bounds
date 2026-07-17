@@ -3,4 +3,4 @@ hide:
   - navigation
 ---
 
-# ::: bounds.indexing
+# ::: fiery.bounds.indexing

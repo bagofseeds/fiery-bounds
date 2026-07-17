@@ -1,19 +1,22 @@
+import inspect
+
+import pytest
 import torch
 from torch.autograd import gradcheck
-import pytest
-import inspect
-from .._utils import torch_version
+
+from fiery.bounds._utils import torch_version
+
 torch_has_fft = torch_version('>=', (1, 8))
 
 if torch_has_fft:
-    from bounds import dct, dst, idct, idst
+    from fiery.bounds import dct, dst, idct, idst
 
 # global parameters
-dtype = torch.double        # data type (double advised to check gradients)
+dtype = torch.double  # data type (double advised to check gradients)
 
 if hasattr(torch, 'use_deterministic_algorithms'):
     torch.use_deterministic_algorithms(True)
-kwargs = dict(rtol=1., raise_exception=True)
+kwargs = dict(rtol=1.0, raise_exception=True)
 if 'check_undefined_grad' in inspect.signature(gradcheck).parameters:
     kwargs['check_undefined_grad'] = False
 if 'nondet_tol' in inspect.signature(gradcheck).parameters:

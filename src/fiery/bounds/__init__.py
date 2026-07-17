@@ -61,14 +61,16 @@ BoundLike
 SequenceOrScalar
     A type hint for values or sequences of values
 """
+
 import torch as _torch
 
-from .padding import *      # noqa: F401, F403
-from .types import *        # noqa: F401, F403
-
-from . import indexing      # noqa: F401
-from . import padding       # noqa: F401
-from . import types         # noqa: F401
+from . import (
+    indexing,  # noqa: F401
+    padding,  # noqa: F401
+    types,  # noqa: F401
+)
+from .padding import *  # noqa: F401, F403
+from .types import *  # noqa: F401, F403
 
 __all__ = [
     'indexing',
@@ -80,13 +82,14 @@ __all__ += types.__all__
 
 
 if hasattr(getattr(_torch, 'fft', None), 'fft'):
-
-    from .realtransforms import *        # noqa: F401, F403
-    from . import realtransforms         # noqa: F401
+    from . import realtransforms  # noqa: F401
+    from .realtransforms import *  # noqa: F401, F403
 
     __all__ += ['realtransforms']
     __all__ += realtransforms.__all__
 
 
-from . import _version  # noqa: E402
-__version__ = _version.get_versions()['version']
+try:
+    from ._version import __version__  # noqa: E402
+except ImportError:  # pragma: no cover
+    __version__ = "0+unknown"

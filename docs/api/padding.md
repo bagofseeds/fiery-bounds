@@ -3,4 +3,4 @@ hide:
   - navigation
 ---
 
-# ::: bounds.padding
+# ::: fiery.bounds.padding

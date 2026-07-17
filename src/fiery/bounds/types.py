@@ -28,6 +28,7 @@ to_torch
     Convert any boundary type to `torch.grid_sample` convention
 
 """  # noqa: E501
+
 __all__ = [
     'BoundType',
     'BoundLike',
@@ -39,12 +40,12 @@ __all__ = [
     'to_torch',
 ]
 from enum import Enum
-from typing import Union, Sequence, TypeVar
+from typing import Sequence, TypeVar, Union
 
 
 class BoundType(Enum):
     """
-    An Enum type that maps boundry modes of any convention to a
+    An Enum type that maps boundary modes of any convention to a
     unique set of values.
 
     ```python
@@ -59,6 +60,7 @@ class BoundType(Enum):
         nocheck = -1
     ```
     """
+
     zero = zeros = constant = gridconstant = 0
     replicate = repeat = nearest = border = edge = 1
     dct1 = mirror = 2
@@ -134,7 +136,7 @@ This table contains an extensive list of aliases:
 |         |                 | median         |               |                       |              |                                                |
 +---------+-----------------+----------------+---------------+-----------------------+--------------+------------------------------------------------+
 
-Some of these conventions are inconsistant with each other. For example
+Some of these conventions are inconsistent with each other. For example
 `"wrap"` in `scipy.ndimage` is different from `"wrap"` in `numpy.pad`,
 which corresponds to `"grid-wrap"` in `scipy.ndimage`. Also, `"reflect"`
 in `numpy.pad` and `torch.pad` is different from `"reflect"` in `scipy.ndimage`,
@@ -146,27 +148,63 @@ bounds_fourier = ('replicate', 'zero', 'dct2', 'dct1', 'dst2', 'dst1', 'dft')
 bounds_scipy = ('nearest', 'constant', 'reflect', 'mirror', 'wrap')
 bounds_torch = ('nearest', 'zeros', 'reflection')
 bounds_torch_pad = ('border', 'constant', 'reflect', 'circular')
-bounds_other = ('repeat', 'neumann', 'circular', 'circulant',
-                'antireflect', 'dirichlet', 'antimirror', 'fft')
-enum_bounds = (BoundType.zero, BoundType.repeat, BoundType.dct1,
-               BoundType.dct2, BoundType.dst1, BoundType.dst2, BoundType.dft)
+bounds_other = (
+    'repeat',
+    'neumann',
+    'circular',
+    'circulant',
+    'antireflect',
+    'dirichlet',
+    'antimirror',
+    'fft',
+)
+enum_bounds = (
+    BoundType.zero,
+    BoundType.repeat,
+    BoundType.dct1,
+    BoundType.dct2,
+    BoundType.dst1,
+    BoundType.dst2,
+    BoundType.dft,
+)
 int_bounds = tuple(range(7))
 
 
-zero_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.zero]
-rept_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.repeat]
-dct1_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.dct1]
-dct2_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.dct2]
-dst1_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.dst1]
-dst2_bounds = [b for b in BoundType.__members__.keys()
-               if getattr(BoundType, b) == BoundType.dst2]
-dft_bounds = [b for b in BoundType.__members__.keys()
-              if getattr(BoundType, b) == BoundType.dft]
+zero_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.zero
+]
+rept_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.repeat
+]
+dct1_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.dct1
+]
+dct2_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.dct2
+]
+dst1_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.dst1
+]
+dst2_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.dst2
+]
+dft_bounds = [
+    b
+    for b in BoundType.__members__.keys()
+    if getattr(BoundType, b) == BoundType.dft
+]
 
 
 def to_enum(bound: SequenceOrScalar[BoundLike]) -> SequenceOrScalar[BoundType]:

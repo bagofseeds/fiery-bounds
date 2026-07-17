@@ -1,12 +1,14 @@
 import os
+from types import GeneratorType as generator
+from typing import Any, List, Optional, Union
+
 import torch
 from torch import Tensor
-from types import GeneratorType as generator
-from typing import List, Any, Optional, Union
 
 
-def ensure_list(x: Any, length: Optional[int] = None, crop: bool = True,
-                **kwargs) -> List:
+def ensure_list(
+    x: Any, length: Optional[int] = None, crop: bool = True, **kwargs
+) -> List:
     """
     Ensure that an object is a list
 
@@ -37,7 +39,7 @@ def make_vector(
     *args,
     dtype: Optional[torch.dtype] = None,
     device: Optional[Union[str, torch.device]] = None,
-    **kwargs
+    **kwargs,
 ):
     """Ensure that the input is a (tensor) vector and pad/crop if necessary.
 
@@ -75,7 +77,7 @@ def make_vector(
     else:
         default = input[-1]
     output = input.new_full([n], default)
-    output[:len(input)] = input
+    output[: len(input)] = input
     return output
 
 
@@ -152,7 +154,7 @@ def torch_version(mode, version):
     # strip alpha tags
     for x in 'abcdefghijklmnopqrstuvwxy':
         if x in patch:
-            patch = patch[:patch.index(x)]
+            patch = patch[: patch.index(x)]
     current_version = (int(major), int(minor), int(patch))
     version = ensure_list(version)
     return _compare_versions(current_version, mode, version)
@@ -164,6 +166,7 @@ HAS_FLOOR_DIVIDE = torch_version('>=', (1, 6))
 
 
 if IS_JITSCRIPT_DEPRECATED:
+
     def jitscript(func):
         return func
 else:
@@ -177,8 +180,9 @@ else:
 # There was at some point a deprecation warning for floor_divide, but it
 # seems to have been lifted afterwards. In torch >= 1.13, floor_divide
 # performs a correct floor division.
-# Since we only apply floor_divide ot positive values, we are fine.
+# Since we only apply floor_divide to positive values, we are fine.
 if torch_version('>=', [1, 8]):
+
     @jitscript
     def floor_div(x, y) -> torch.Tensor:
         return torch.div(x, y, rounding_mode='floor')
@@ -189,6 +193,7 @@ if torch_version('>=', [1, 8]):
 elif torch_version('<', (1, 6)):
     floor_div = floor_div_int = torch.div
 else:
+
     @jitscript
     def floor_div(x, y) -> torch.Tensor:
         return torch.div(x, y, rounding_mode='floor')
@@ -197,7 +202,7 @@ else:
     def floor_div_int(x, y: int) -> torch.Tensor:
         return torch.div(x, y, rounding_mode='floor')
 
-    floor_div = floor_div_int = torch.floor_divide
+    floor_div = floor_div_int = torch.floor_divide  # noqa: F811
 
 #     @jitscript
 #     def floor_div(x, y) -> torch.Tensor:
@@ -273,12 +278,13 @@ def reverse_list_int(x: List[int]) -> List[int]:
     """TorchScript equivalent to `x[::-1]`"""
     if len(x) == 0:
         return x
-    return [x[i] for i in range(-1, -len(x)-1, -1)]
+    return [x[i] for i in range(-1, -len(x) - 1, -1)]
 
 
 @jitscript
-def cumprod_list_int(x: List[int], reverse: bool = False,
-                     exclusive: bool = False) -> List[int]:
+def cumprod_list_int(
+    x: List[int], reverse: bool = False, exclusive: bool = False
+) -> List[int]:
     """Cumulative product of elements in the list
 
     Parameters
