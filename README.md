@@ -2,7 +2,7 @@
 
 Boundary conditions (circulant, mirror, reflect) and real transforms (DCT, DST) in PyTorch.
 
-`fiery-bounds` is a [`fiery`](https://github.com/bagofseeds/fiery) match: it
+`fiery-bounds` is a [`fiery`](https://bagofseeds.github.io/fiery/) match: it
 installs on its own and imports as `fiery.bounds`.
 
 ## Overview
@@ -50,8 +50,8 @@ pip install fiery-bounds
 
 ## Related packages
 
-- [`fiery-interpol`](https://github.com/bagofseeds/fiery-interpol):
+- [`fiery-interpol`](https://bagofseeds.github.io/fiery-interpol/):
   B-spline interpolation with the same boundary conditions as those
   implemented here.
-- [`fiery-distmap`](https://github.com/bagofseeds/fiery-distmap):
+- [`fiery-distmap`](https://bagofseeds.github.io/fiery-distmap/):
   Euclidean distance transform.
