@@ -33,7 +33,7 @@ Finally, it implements additional utilities:
 ## Documentation
 
 See our [**documentation**](https://bagofseeds.github.io/fiery-bounds/) and
-[**notebooks**](docs/examples/).
+[**notebooks**](https://bagofseeds.github.io/fiery-bounds/examples/).
 
 ## Installation
 

@@ -41,9 +41,9 @@ idct
 idst
     One-dimensional Inverse Discrete Sine Transform (DST)
 dctn
-    N-dimensional Discrete Cosine Transform (IDCT)
+    N-dimensional Discrete Cosine Transform (DCT)
 dstn
-    N-dimensional Discrete Sine Transform (IDST)
+    N-dimensional Discrete Sine Transform (DST)
 idctn
     N-dimensional Inverse Discrete Cosine Transform (IDCT)
 idstn

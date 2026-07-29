@@ -4,7 +4,7 @@ This module implements discrete transforms for real signals:
 - [Discrete Cosine Transform](https://w.wiki/AQEt)
 - [Discrete Sine Transform](https://w.wiki/ATnn)
 
-The implementations relies on the FFT under-the-hood, with memory-saving
+The implementation relies on the FFT under the hood, with memory-saving
 tricks (borrowed from [`cupy`](https://github.com/cupy/cupy)).
 
 The table below lists all functions implemented in the module.
@@ -27,14 +27,13 @@ idct
 idst
     One-dimensional Inverse Discrete Sine Transform (DST)
 dctn
-    N-dimensional Discrete Cosine Transform (IDCT)
+    N-dimensional Discrete Cosine Transform (DCT)
 dstn
-    N-dimensional Discrete Sine Transform (IDST)
+    N-dimensional Discrete Sine Transform (DST)
 idctn
     N-dimensional Inverse Discrete Cosine Transform (IDCT)
 idstn
     N-dimensional Inverse Discrete Sine Transform (IDST)
-```
 
 """
 
@@ -89,6 +88,7 @@ from typing import Optional
 from torch import Tensor
 
 from ._realtransforms_autograd import DCTN, DSTN, flipnorm, fliptype
+from .types import SequenceOrScalar
 
 _IMPLEMENTED_TYPES = (1, 2, 3)
 
@@ -108,7 +108,7 @@ def dct(
     x : tensor
         The input tensor
     dim : int
-        Dimensions over which the DCT is computed.
+        Dimension along which the DCT is computed.
         Default is the last one.
     norm : {"backward", "ortho", "forward"}
         Normalization mode. Default is "backward".
@@ -145,7 +145,7 @@ def idct(
     x : tensor
         The input tensor
     dim : int
-        Dimensions over which the DCT is computed.
+        Dimension along which the DCT is computed.
         Default is the last one.
     norm : {"backward", "ortho", "forward"}
         Normalization mode. Default is "backward".
@@ -186,12 +186,12 @@ def dst(
     x : tensor
         The input tensor
     dim : int
-        Dimensions over which the DCT is computed.
+        Dimension along which the DST is computed.
         Default is the last one.
     norm : {"backward", "ortho", "forward", "ortho_scipy"}
         Normalization mode. Default is "backward".
     type: {1, 2, 3, 4}
-        Type of the DCT. Default type is 2.
+        Type of the DST. Default type is 2.
 
     Returns
     -------
@@ -228,12 +228,12 @@ def idst(
     x : tensor
         The input tensor
     dim : int
-        Dimensions over which the DCT is computed.
+        Dimension along which the DST is computed.
         Default is the last one.
     norm : {"backward", "ortho", "forward", "ortho_scipy"}
         Normalization mode. Default is "backward".
     type: {1, 2, 3, 4}
-        Type of the DCT. Default type is 2.
+        Type of the DST. Default type is 2.
 
     Returns
     -------
@@ -250,7 +250,7 @@ def idst(
 
 def dctn(
     x: Tensor,
-    dim: Optional[int] = None,
+    dim: Optional[SequenceOrScalar[int]] = None,
     norm: str = 'backward',
     type: int = 2,
 ) -> Tensor:
@@ -287,7 +287,7 @@ def dctn(
 
 def idctn(
     x: Tensor,
-    dim: Optional[int] = None,
+    dim: Optional[SequenceOrScalar[int]] = None,
     norm: str = 'backward',
     type: int = 2,
 ) -> Tensor:
@@ -323,7 +323,7 @@ def idctn(
 
 def dstn(
     x: Tensor,
-    dim: Optional[int] = None,
+    dim: Optional[SequenceOrScalar[int]] = None,
     norm: str = 'backward',
     type: int = 2,
 ) -> Tensor:
@@ -343,12 +343,12 @@ def dstn(
     x : tensor
         The input tensor
     dim : [sequence of] int
-        Dimensions over which the DCT is computed.
+        Dimensions over which the DST is computed.
         If not given, all dimensions are used.
     norm : {"backward", "ortho", "forward", "ortho_scipy"}
         Normalization mode. Default is "backward".
     type: {1, 2, 3, 4}
-        Type of the DCT. Default type is 2.
+        Type of the DST. Default type is 2.
 
     Returns
     -------
@@ -366,7 +366,7 @@ def dstn(
 
 def idstn(
     x: Tensor,
-    dim: Optional[int] = None,
+    dim: Optional[SequenceOrScalar[int]] = None,
     norm: str = 'backward',
     type: int = 2,
 ) -> Tensor:
@@ -386,12 +386,12 @@ def idstn(
     x : tensor
         The input tensor
     dim : [sequence of] int
-        Dimensions over which the DCT is computed.
+        Dimensions over which the DST is computed.
         If not given, all dimensions are used.
-    norm : {"backward", "ortho", "forward", "ortho_scipy}
+    norm : {"backward", "ortho", "forward", "ortho_scipy"}
         Normalization mode. Default is "backward".
     type: {1, 2, 3, 4}
-        Type of the DCT. Default type is 2.
+        Type of the DST. Default type is 2.
 
     Returns
     -------

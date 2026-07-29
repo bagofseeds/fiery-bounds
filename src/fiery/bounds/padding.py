@@ -180,13 +180,18 @@ def ensure_shape(
     inp : tensor
         Input tensor
     shape : SequenceOrScalar[int]
-        Output shape
+        Output shape. A value of `None` for a given dimension keeps
+        that dimension's current size.
     mode : SequenceOrScalar[BoundLike]
         Boundary mode
     value : scalar, default=0
         Value for mode `'constant'`
-    side : "{'pre', 'post', 'both'}"
+    side : "{'pre', 'post', 'both'}", default='post'
         Side to crop/pad
+    ceil : bool, default=False
+        When `side='both'` and the amount to crop/pad cannot be
+        split evenly, put the extra unit on the `'pre'` side (`True`)
+        rather than the `'post'` side (`False`).
 
     Returns
     -------
