@@ -4,5 +4,5 @@ icon: lucide/notebook
 
 # Examples
 
-- [Padding](pad.md)
-- [Real transforms](realtransforms.md)
+- [Padding](pad.ipynb)
+- [Real transforms](realtransforms.ipynb)

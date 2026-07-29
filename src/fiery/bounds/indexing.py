@@ -25,6 +25,7 @@ dct2
     Apply DCT-II boundary conditions to an index.
     **Aliases**:
     [`reflect`][bounds.indexing.reflect],
+    [`reflection`][bounds.indexing.reflection],
     [`gridmirror`][bounds.indexing.gridmirror],
     [`neumann`][bounds.indexing.neumann].
 dst1
@@ -84,7 +85,8 @@ def replicate(i, n):
     !!! info "Aliases"
         [`border`][bounds.indexing.border],
         [`nearest`][bounds.indexing.nearest],
-        [`repeat`][bounds.indexing.repeat]
+        [`repeat`][bounds.indexing.repeat],
+        [`edge`][bounds.indexing.edge]
 
     Parameters
     ----------
@@ -120,7 +122,9 @@ def dft(i, n):
 
     !!! info "Aliases"
         [`wrap`][bounds.indexing.wrap],
-        [`circular`][bounds.indexing.circular]
+        [`gridwrap`][bounds.indexing.gridwrap],
+        [`circular`][bounds.indexing.circular],
+        [`circulant`][bounds.indexing.circulant]
 
     Parameters
     ----------
@@ -154,6 +158,8 @@ def dct2(i, n):
 
     !!! info "Aliases"
         [`reflect`][bounds.indexing.reflect],
+        [`reflection`][bounds.indexing.reflection],
+        [`gridmirror`][bounds.indexing.gridmirror],
         [`neumann`][bounds.indexing.neumann]
 
     Parameters
@@ -314,7 +320,7 @@ def dst2(i, n):
     i : int or tensor
         Index that falls inside the field of view [0, n-1]
     s : [tensor of] {1, 0, -1}
-        Sign of the transformation (always 1 for dct1)
+        Sign of the transformation
 
     """
     return dst2_script(i, n) if torch.is_tensor(i) else dst2_int(i, n)
